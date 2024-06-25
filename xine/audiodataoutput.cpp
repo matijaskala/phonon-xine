@@ -45,7 +45,7 @@ AudioDataOutputXT::AudioDataOutputXT(AudioDataOutput *output) :
     xine_audio_port_t *port = xine_open_audio_driver(m_xine, "none", 0);
 
     // Allocate a new scope plugin
-    m_plugin = (scope_plugin_t*)qMalloc(sizeof(scope_plugin_t));
+    m_plugin = (scope_plugin_t*)malloc(sizeof(scope_plugin_t));
 
     // It is also a post plugin
     post_plugin_t *post_plugin  = (post_plugin_t*)m_plugin;
@@ -59,7 +59,7 @@ AudioDataOutputXT::AudioDataOutputXT(AudioDataOutput *output) :
     /* code is straight from xine_init_post()
        can't use that function as it only dlopens the plugins
        and our plugin is statically linked in */
-    post_plugin->running_ticket = (*m_xine).port_ticket;
+    post_plugin->running_ticket = *(xine_ticket_t**)(m_xine+1);
     post_plugin->xine = m_xine;
 
     // Store a reference to our own object in the post plugin struct

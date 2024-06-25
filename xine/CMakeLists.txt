@@ -9,24 +9,6 @@
 #  xinelib 1.1.15 - xine headers broken - need patch to compiles
 #  xinelib 1.2 untested => unsupported
 
-if (UNIX)
-   check_cxx_source_compiles("
-#include <sys/types.h>
- /* Check that off_t can represent 2**63 - 1 correctly.
-    We can't simply define LARGE_OFF_T to be 9223372036854775807,
-    since some C++ compilers masquerading as C compilers
-    incorrectly reject 9223372036854775807.  */
-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
-
-  int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721 && LARGE_OFF_T % 2147483647 == 1) ? 1 : -1];
-  int main() { return 0; }
-" _OFFT_IS_64BIT)
-
-   if (NOT _OFFT_IS_64BIT)
-     add_definitions(-D_FILE_OFFSET_BITS=64)
-   endif (NOT _OFFT_IS_64BIT)
-endif (UNIX)
-
 string(REGEX REPLACE "^[0-9]*\\.([0-9]*)\\.[0-9]*$" "\\1" XINE_MINOR_VERSION "${XINE_VERSION}")
 # if an older xinelib is installed give a warning about problems but continue
 if(XINE_MINOR_VERSION LESS 2 AND XINE_BUGFIX_VERSION LESS 90)
@@ -80,7 +62,6 @@ else(XCB_FOUND AND XINE_XCB_FOUND)
   message(STATUS "Cannot compile VideoWidget for the xine backend. Needs xine version 1.1.9 or later and libxcb.")
   SET(XCB_VIDEO FALSE)
 endif(XCB_FOUND AND XINE_XCB_FOUND)
-macro_log_feature(XCB_VIDEO "XCB" "XCB is needed for the video widget, libxine needs to be compiled with XCB" "http://xcb.freedesktop.org/")
 
 SET(XINEWIDGET_FOUND TRUE)
 if(XCB_FOUND)
@@ -95,15 +76,17 @@ include_directories(${XINE_INCLUDE_DIR})
 configure_file(config-xine-widget.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-xine-widget.h )
 configure_file(xine.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/xine.desktop)
 
+add_definitions(-fpermissive)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_AUTOMOC ON)
 add_definitions(-DPHONON_BACKEND_VERSION_4_4)
-automoc4_add_library(phonon_xine MODULE ${phonon_xine_SRCS})
+add_library(phonon_xine MODULE ${phonon_xine_SRCS})
 set_target_properties(phonon_xine PROPERTIES PREFIX "")
 target_link_libraries(phonon_xine ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDBUS_LIBRARY} ${PHONON_LIBRARY} ${XINE_LIBRARY})
 if(XCB_FOUND AND XINE_XCB_FOUND)
     target_link_libraries(phonon_xine ${LIBXCB_LIBRARIES})
 endif(XCB_FOUND AND XINE_XCB_FOUND)
 
-install(TARGETS phonon_xine DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/phonon_backend)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xine.desktop DESTINATION ${SERVICES_INSTALL_DIR}/phononbackends)
+install(TARGETS phonon_xine DESTINATION ${KDE_INSTALL_PLUGINDIR}/plugins/phonon_backend)
 
-phonon_install_icons(${ICON_INSTALL_DIR})
+ecm_install_icons(DESTINATION ${KDE_INSTALL_ICONDIR})

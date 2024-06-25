@@ -147,10 +147,10 @@ PARAM_ITEM(POST_PARAM_TYPE_DOUBLE, fadeTo, NULL, 0.0, maxVolume, 0, const_cast<c
 PARAM_ITEM(POST_PARAM_TYPE_INT, fadeTime, NULL, 0.0, 10000.0, 0, const_cast<char*>( I18N_NOOP("fade time in milliseconds") ))
 END_PARAM_DESCR(param_descr)
 
-static int set_parameters (xine_post_t *this_gen, void *param_gen) 
+static int set_parameters (xine_post_t *this_gen, const void *param_gen) 
 {
     kvolumefader_plugin_t *that = reinterpret_cast<kvolumefader_plugin_t *>(this_gen);
-    kvolumefader_parameters_t *param = static_cast<kvolumefader_parameters_t *>(param_gen);
+    const kvolumefader_parameters_t *param = static_cast<const kvolumefader_parameters_t *>(param_gen);
 
     pthread_mutex_lock (&that->lock);
     that->fadeCurve = param->fadeCurve;

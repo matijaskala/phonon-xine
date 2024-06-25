@@ -121,10 +121,10 @@ PARAM_ITEM(POST_PARAM_TYPE_DOUBLE, eqBands[9], NULL, -KEQUALIZER_MAX_GAIN, KEQUA
 
 END_PARAM_DESCR(param_descr)
 
-static int set_parameters (xine_post_t *this_gen, void *param_gen) 
+static int set_parameters (xine_post_t *this_gen, const void *param_gen) 
 {
     kequalizer_plugin_t *that = reinterpret_cast<kequalizer_plugin_t *>(this_gen);
-    kequalizer_parameters_t *param = static_cast<kequalizer_parameters_t *>(param_gen);
+    const kequalizer_parameters_t *param = static_cast<const kequalizer_parameters_t *>(param_gen);
 
     pthread_mutex_lock (&that->lock);
     

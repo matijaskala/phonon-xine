@@ -22,7 +22,7 @@
 
 #include <QtCore/QExplicitlySharedDataPointer>
 #include <QtCore/QObject>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include "shareddata.h"
 #include "xinethread.h"
 

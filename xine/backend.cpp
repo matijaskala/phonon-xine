@@ -42,13 +42,11 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QThread>
 #include <QtDBus/QDBusConnection>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QSet>
 #include <QtCore/QVariant>
 #include <QtCore/QtPlugin>
 #include <QtCore/QSettings>
-
-Q_EXPORT_PLUGIN2(phonon_xine, Phonon::Xine::Backend)
 
 static Phonon::Xine::Backend *s_instance = 0;
 
